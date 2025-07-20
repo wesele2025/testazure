@@ -1,0 +1,30 @@
+name: Get Flag
+on: [workflow_dispatch]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  get-flag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          client-id: 75b9194d-6827-45ff-9f19-d965da9f9bf9
+          tenant-id: fdd066e1-ee37-49bc-b08f-d0e152119b04
+          subscription-id: 4e5a272e-4ee9-473b-8379-ca02cf78ef42
+          enable-AzPSSession: true
+
+      - name: Download flag
+        run: |
+          az storage blob download \
+            --account-name iam-azure-lab-3-identity \
+            --container-name flag \
+            --name flag.txt \
+            --file flag.txt \
+            --auth-mode login
+
+      - name: Read flag
+        run: cat flag.txt
